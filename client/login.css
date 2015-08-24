@@ -1,0 +1,70 @@
+.text {
+  color: #333;
+}
+.modal-header {
+  border-bottom: none;
+  padding-bottom: 0px;
+}
+.modal-header .modal-title {
+  text-align: center;
+  text-decoration: underline;
+}
+.modal-body p,
+.modal-body form {
+  text-align: center;
+}
+.modal-body input[type="submit"][disabled] {
+  opacity: .4;
+}
+#loginBox {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  background-color: #FAFAFA;
+  border-radius: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+#loginBox #title {
+  text-align: center;
+  font-size: 400%;
+  color: #848484;
+}
+#loginBox #title #trademark {
+  vertical-align: 65%;
+  font-size: 35%;
+  color: #848484;
+}
+#loginBox #loginForm {
+  text-align: center;
+  font-size: 200%;
+}
+#loginBox #loginForm input[type="submit"][disabled] {
+  opacity: .4;
+}
+#loginBox #loginError {
+  text-align: center;
+  font-size: 120%;
+  color: red;
+  display: none;
+}
+#loginBox #resetPassword {
+  text-align: center;
+  font-size: 120%;
+  color: #A4A4A4;
+  text-decoration: underline;
+}
+#loginBox #resetPassword #resetPasswordLink:hover {
+  color: #333;
+  cursor: pointer;
+}
+#invalidCurrentPassword,
+#invalidNewPassword,
+#mismatchingPasswords {
+  text-align: center;
+  font-size: 98%;
+  color: red;
+  display: none;
+}

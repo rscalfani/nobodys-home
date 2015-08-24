@@ -1,0 +1,87 @@
+.text {
+  color: #333;
+}
+
+.modal-header {
+  border-bottom: none;
+  padding-bottom: 0px;
+
+  .modal-title {
+    text-align: center;
+    text-decoration: underline;
+  }
+}
+
+.modal-body {
+  p, form {
+    text-align: center;
+  }
+
+  input[type="submit"] {
+    &[disabled] {
+      opacity: .4;
+    }
+  }
+}
+
+#loginBox {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  background-color: #FAFAFA;
+  border-radius: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+
+  #title {
+    text-align: center;
+    font-size: 400%;
+    color: #848484;
+
+    #trademark {
+      vertical-align: 65%;
+      font-size: 35%;
+      color: #848484;
+    }
+  }
+
+  #loginForm {
+    text-align: center;
+    font-size: 200%;
+    //color: #A4A4A4;
+
+    input[type="submit"] {
+      &[disabled] {
+        opacity: .4;
+      }
+    }
+  }
+
+  #loginError {
+    text-align: center;
+    font-size: 120%;
+    color: red;
+    display: none;
+  }
+
+  #resetPassword {
+    text-align: center;
+    font-size: 120%;
+    color: #A4A4A4;
+    text-decoration: underline;
+
+    #resetPasswordLink:hover {
+      color: #333;
+      cursor: pointer;
+    }
+  }
+}
+
+#invalidCurrentPassword, #invalidNewPassword, #mismatchingPasswords {
+  text-align: center;
+  font-size: 98%;
+  color: red;
+  display: none;
+}

@@ -1,0 +1,15 @@
+{
+  "name": "nobodyshome",
+  "version": "0.0.1",
+  "description": "A home automation program that turns lights on and off for when you're away but want to make it seem like you're home.",
+  "main": "server/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Rachel Scalfani",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^2.9.34",
+    "co": "^4.6.0"
+  }
+}
