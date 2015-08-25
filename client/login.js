@@ -4,19 +4,33 @@ var showResetPasswordCodeModal = function() {
 		keyboard: false
 	});
 
-	$('#resetPasswordCodeModal input[type="submit"]').prop('disabled', 'disabled');
-	setTimeout(function() {
-		$('#resetPasswordCodeModal input[type="submit"]').prop('disabled', '');
-	}, 5 * 1000);
+	$.ajax({
+		url: '/api',
+		type :'POST',
+		contentType: 'application/json',
+		data: JSON.stringify({func: 'generateResetPasswordCode'})
+	})
+	.then(function(result) {
+		$('#resetPasswordCodeDisplay').val(result.code);
 
-	$('#resetPasswordCodeModal input[type="submit"]').click(function(event) {
-		event.preventDefault();
-		$('#resetPasswordCodeModal').modal('hide');
-		//TODO need to display code (not here) then reset form
+		$('#resetPasswordCodeModal input[type="submit"]').prop('disabled', 'disabled');
+		setTimeout(function() {
+			$('#resetPasswordCodeModal input[type="submit"]').prop('disabled', '');
+		}, 5 * 1000);
+
+		$('#resetPasswordCodeModal input[type="submit"]').click(function(event) {
+			event.preventDefault();
+			$('#resetPasswordCodeModal').modal('hide');
+			$('#resetPasswordCodeDisplay').val('XXX-XXX-XXX');
+		});
+	})
+	.then(null, function(err) {
+		alert(err); //TODO handle errors
 	});
 };
 
 var changePassword = function() {
+	$('#loginBox input[type="submit"]').prop('disabled', 'disabled');
 	$('#changePasswordModal').modal({
 		backdrop: 'static',
 		keyboard: false
@@ -47,7 +61,8 @@ var changePassword = function() {
 			if (result.passwordChanged) {
 				$('#changePasswordModal').modal('hide');
 				$('#changePasswordModal form').trigger('reset');
-				$('#loginBox input[type="submit"]').prop('disabled', 'disabled');
+				$('#changePasswordModal [type="text"]').prop('type', 'password');
+				$('#changePasswordModal input[type="submit"]').prop('disabled', 'disabled');
 				showResetPasswordCodeModal();
 			}
 		})
@@ -66,14 +81,14 @@ var isFormFilled = function(selector) {
 	return formFilled;
 };
 
-var isChangePasswordFormValid = function() {
-	var form = $('#changePasswordModal .modal-body');
-	return isFormFilled(form) && $('#newPassword').val() == $('#confirmNewPassword').val();
-};
-
 var isResetPasswordFormValid = function() {
 	var form = $('#resetPasswordModal .modal-body');
 	return isFormFilled(form);
+};
+
+var isChangePasswordFormValid = function() {
+	var form = $('#changePasswordModal .modal-body');
+	return isFormFilled(form) && $('#newPassword').val() == $('#confirmNewPassword').val();
 };
 
 var disableSubmitIf = function(value, id) {
@@ -96,16 +111,16 @@ $(function() {
 		enableSubmitIf(isResetPasswordFormValid(), '#resetPasswordModal');
 	});
 
+	$('#resetPasswordLink').click(function() {
+		$('#resetPasswordModal').modal();
+	});
+
 	$('#currentPassword, #newPassword, #confirmNewPassword').keyup(function() {
 		enableSubmitIf(isChangePasswordFormValid(), '#changePasswordModal');
 		if ($('#newPassword').val() == $('#confirmNewPassword').val())
 			$('#mismatchingPasswords').css('display', 'none');
 		else
 			$('#mismatchingPasswords').css('display', 'block');
-	});
-
-	$('#resetPasswordLink').click(function() {
-		$('#resetPasswordModal').modal();
 	});
 
 	$('#revealAll').click(function() { //TODO
@@ -138,10 +153,12 @@ $(function() {
 					if (result.changePassword) {
 						changePassword();
 						$('#loginForm').trigger('reset');
+						$('#resetPasswordModal form').trigger('reset');
 					}
 					else {
 						console.log('logging in');
 						$('#loginForm').trigger('reset');
+						$('#resetPasswordModal form').trigger('reset');
 					}
 				}
 				else if (result.auth === false)

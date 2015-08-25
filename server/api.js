@@ -1,6 +1,7 @@
 var co = require('co');
 var Promise = require('bluebird');
 var pfs = Promise.promisifyAll(require('fs'));
+var R = require('ramda');
 
 module.exports = function(config) {
 	var getPassword = co.wrap(function*() {
@@ -18,6 +19,14 @@ module.exports = function(config) {
 
 	var setPassword = co.wrap(function* (newPassword) {
 		yield pfs.writeFileAsync(config.ws.passwordLoc, newPassword);
+	});
+
+	var getCode = co.wrap(function*() {
+		return yield pfs.readFileAsync(config.ws.codeLoc);
+	});
+
+	var setCode = co.wrap(function* (code) {
+		yield pfs.writeFileAsync(config.ws.codeLoc, code);
 	});
 
 	return {
@@ -45,6 +54,27 @@ module.exports = function(config) {
 				yield setPassword(changePasswordObj.newPassword);
 				return {
 					passwordChanged: true
+				};
+			}
+			catch(err) {
+				return {err: err.message};
+			}
+		}),
+		generateResetPasswordCode: co.wrap(function*(generateObj) {
+			try {
+				var randomizeThree = function() {
+					var randomThree = '';
+					for (var i = 0; i < 3; ++i)
+						randomThree += R.toUpper(Math.random().toString(36).substr(2, 1));
+					return randomThree;
+				};
+				var resetPasswordCode = [];
+				for (var i = 0; i < 3; ++i)
+					resetPasswordCode.push(randomizeThree());
+				var code = R.join('-', resetPasswordCode);
+				yield setCode(R.replace('-', '', code));
+				return {
+					code: code
 				};
 			}
 			catch(err) {
