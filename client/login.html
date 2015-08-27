@@ -12,10 +12,11 @@
 
         <script src="../bower_components/jquery/dist/jquery.min.js"></script>
         <script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-        <script src="login.js"></script>
+        <script src="bundle.js"></script>
+
     </head>
     <body>
-        <div id="loginBox">
+        <div id="loginBox" style="display: none">
             <p id="title"><u>Nobody's Home</u><span id="trademark">&#8482</span></p><br>
             <form id="loginForm">
                 <input id="username" class="text" type="text" placeholder="username"/><br><br>
@@ -36,8 +37,13 @@
                     <div class="modal-body">
                         <p>Please enter the reset password code.</p>
                         <form>
-                            <input id="resetPasswordCode" class="text" type="text"/>
-                            <input type="submit" value="Submit" disabled="disabled"/>
+                            <input id="resetPasswordCode1" class="text" type="text" size="5" maxlength="3"/>
+                            <p>-</p>
+                            <input id="resetPasswordCode2" class="text" type="text" size="5" maxlength="3"/>
+                            <p>-</p>
+                            <input id="resetPasswordCode3" class="text" type="text" size="5" maxlength="3"/>
+                            <input type="submit" value="Submit" disabled="disabled"/><br>
+                            <p id="invalidResetPasswordCode">invalid reset password code</p>
                         </form>
                     </div>
                 </div>

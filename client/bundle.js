@@ -1,3 +1,104 @@
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+var createChangePasswordHandlers = function() {
+	$('#revealAll').click(function() {
+		if ($('#revealAll').prop('checked'))
+			$('#changePasswordModal [type="password"]').prop('type', 'text');
+		else
+			$('#changePasswordModal [type="text"]').prop('type', 'password');
+	});
+
+	$('#changePasswordModal input[type="submit"]').click(changePassword);
+};
+
+var createResetPasswordCodeHandlers = function() {
+	$('#resetPasswordCodeModal input[type="submit"]').click(function(event) {
+		event.preventDefault();
+		$('#resetPasswordCodeModal').modal('hide');
+		$('#resetPasswordCodeDisplay').val('XXX-XXX-XXX');
+	});
+};
+
+var showResetPasswordCodeModal = function() {
+	$('#resetPasswordCodeModal').modal({
+		backdrop: 'static',
+		keyboard: false
+	});
+
+	$.ajax({
+		url: '/api',
+		type :'POST',
+		contentType: 'application/json',
+		data: JSON.stringify({func: 'generateResetPasswordCode'})
+	})
+	.then(function(result) {
+		$('#resetPasswordCodeDisplay').val(result.code);
+
+		$('#resetPasswordCodeModal input[type="submit"]').prop('disabled', 'disabled');
+		setTimeout(function() {
+			$('#resetPasswordCodeModal input[type="submit"]').prop('disabled', '');
+		}, 5 * 1000);
+	})
+	.then(null, function(err) {
+		alert(err); //TODO handle errors
+	});
+};
+
+var changePassword = function(event) {
+	event.preventDefault();
+
+	var changePassword = {
+		func: 'changePassword',
+		newPassword: $('#newPassword').val(),
+		oldPassword: $('#currentPassword').val()
+	};
+
+	$.ajax({
+		url: '/api',
+		type :'POST',
+		contentType: 'application/json',
+		data: JSON.stringify(changePassword)
+	})
+		.then(function(result) {
+			$('#invalidCurrentPassword').css('display', 'none');
+			$('#invalidNewPassword').css('display', 'none');
+			if (result.invalidOldPassword)
+				$('#invalidCurrentPassword').css('display', 'block');
+			if (result.invalidNewPassword)
+				$('#invalidNewPassword').css('display', 'block');
+			if (result.passwordChanged) {
+				$('#changePasswordModal').modal('hide');
+				clearChangePasswordModal();
+				showResetPasswordCodeModal();
+			}
+		})
+		.then(null, function(err) {
+			alert(err); //TODO handle errors
+		});
+};
+
+var clearChangePasswordModal = function() {
+	$('#changePasswordModal form').trigger('reset');
+	$('#changePasswordModal [type="text"]').prop('type', 'password');
+	$('#changePasswordModal input[type="submit"]').prop('disabled', 'disabled');
+};
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+var init = function() {
+	createChangePasswordHandlers();
+	createResetPasswordCodeHandlers();
+};
+
+var show = function() {
+	$('#changePasswordModal').modal({
+		backdrop: 'static',
+		keyboard: false
+	});
+};
+
+module.exports = {
+	init: init,
+	show: show
+};
+},{}],2:[function(require,module,exports){
 //TODO HANDLE API ERR RETURNS {err: 'message'}
 
 var changePassword = require('./changePassword');
@@ -163,3 +264,15 @@ module.exports = {
 	show: show,
 	hide: hide
 };
+},{"./changePassword":1}],3:[function(require,module,exports){
+var login = require('./login');
+var changePassword = require('./changePassword');
+
+$(function() {
+	login.init();
+	changePassword.init();
+	login.show();
+});
+
+
+},{"./changePassword":1,"./login":2}]},{},[3]);

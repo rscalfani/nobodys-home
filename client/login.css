@@ -53,12 +53,22 @@
 #loginBox #resetPassword {
   text-align: center;
   font-size: 120%;
-  color: #A4A4A4;
+  color: #646464;
   text-decoration: underline;
 }
 #loginBox #resetPassword #resetPasswordLink:hover {
   color: #333;
   cursor: pointer;
+}
+#resetPasswordModal form input[type="text"],
+#resetPasswordModal form p {
+  display: inline-block;
+}
+#resetPasswordModal form #invalidResetPasswordCode {
+  text-align: center;
+  font-size: 98%;
+  color: red;
+  display: none;
 }
 #invalidCurrentPassword,
 #invalidNewPassword,
