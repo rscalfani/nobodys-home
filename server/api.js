@@ -1,24 +1,30 @@
 var co = require('co');
+var crypto = require('crypto');
 var Promise = require('bluebird');
 var pfs = Promise.promisifyAll(require('fs'));
 var R = require('ramda');
 
+var hash = function(text) {
+	return crypto.createHmac('sha256', 'nobodyshome').update(text).digest('hex')
+};
+
+var defaultPasswordHash = hash('password');
+
 module.exports = function(config) {
-	var getPassword = co.wrap(function*() {
+	var getPasswordHash = co.wrap(function*() {
 		try {
 			return yield pfs.readFileAsync(config.ws.passwordLoc);
 		}
 		catch(err) {
 			if (err.code == 'ENOENT') {
-				yield setPassword('password');
-				return 'password';
+				return defaultPasswordHash;
 			}
 			throw err;
 		}
 	});
 
-	var setPassword = co.wrap(function* (newPassword) {
-		yield pfs.writeFileAsync(config.ws.passwordLoc, newPassword);
+	var setPasswordHash = co.wrap(function* (newPassword) {
+		yield pfs.writeFileAsync(config.ws.passwordLoc, hash(newPassword));
 	});
 
 	var getCode = co.wrap(function*() {
@@ -32,10 +38,11 @@ module.exports = function(config) {
 	return {
 		login: co.wrap(function*(loginObj) {
 			try {
-				var password = yield getPassword();
+				var passwordHash = yield getPasswordHash();
+				var loginPasswordHash = hash(loginObj.password);
 				return {
-					auth: loginObj.password == password && loginObj.username == 'admin',
-					changePassword: loginObj.password == 'password'
+					auth: loginPasswordHash == passwordHash && loginObj.username == 'admin',
+					changePassword: loginPasswordHash == defaultPasswordHash
 				};
 			}
 			catch(err) {
@@ -45,13 +52,13 @@ module.exports = function(config) {
 		changePassword: co.wrap(function*(changePasswordObj) {
 			try {
 				var err = {};
-				if (changePasswordObj.newPassword == 'password')
+				if (changePasswordObj.newPassword == defaultPasswordHash)
 					err.invalidNewPassword = true;
-				if ((yield getPassword()) != changePasswordObj.oldPassword)
+				if ((yield getPasswordHash()) != hash(changePasswordObj.oldPassword))
 					err.invalidOldPassword = true;
 				if (Object.keys(err).length != 0)
 					return err;
-				yield setPassword(changePasswordObj.newPassword);
+				yield setPasswordHash(changePasswordObj.newPassword);
 				return {
 					passwordChanged: true
 				};
@@ -72,9 +79,33 @@ module.exports = function(config) {
 				for (var i = 0; i < 3; ++i)
 					resetPasswordCode.push(randomizeThree());
 				var code = R.join('-', resetPasswordCode);
-				yield setCode(R.replace('-', '', code));
+				yield setCode(R.replace(/-/g, '', code));
 				return {
 					code: code
+				};
+			}
+			catch(err) {
+				return {err: err.message};
+			}
+		}),
+		getResetPasswordCode: co.wrap(function*(getObj) {
+			try {
+				var code = (yield getCode()).toString();
+				if (getObj.code.toUpperCase() == code.toUpperCase()) {
+					try {
+						yield pfs.unlinkAsync(config.ws.passwordLoc);
+					}
+					catch(err) {
+						if (err.code != 'ENOENT') {
+							return {err: err.message};
+						}
+					}
+					return {
+						passwordReset: true
+					}
+				}
+				return {
+					passwordReset: false
 				};
 			}
 			catch(err) {
