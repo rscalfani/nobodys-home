@@ -1,0 +1,33 @@
+<div id="loginBox" style="display: none">
+    <p id="title"><u>Nobody's Home</u><span id="trademark">&#8482</span></p><br>
+    <form id="loginForm">
+        <input id="username" class="text" type="text" placeholder="username"/><br><br>
+        <input id="password" class="text" type="password" placeholder="password"/><br><br>
+        <input type="submit" value="Login" disabled="disabled"/>
+    </form><br>
+    <p id="loginError">incorrect username and/or password</p>
+    <p id="resetPassword"><span id="resetPasswordLink">reset password</span></p>
+</div>
+
+<div id="resetPasswordModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Reset Password</h4>
+            </div>
+            <div class="modal-body">
+                <p>Please enter the reset password code.</p>
+                <form>
+                    <input id="resetPasswordCode1" class="text" type="text" size="5" maxlength="3"/>
+                    <p>-</p>
+                    <input id="resetPasswordCode2" class="text" type="text" size="5" maxlength="3"/>
+                    <p>-</p>
+                    <input id="resetPasswordCode3" class="text" type="text" size="5" maxlength="3"/>
+                    <input type="submit" value="Submit" disabled="disabled"/><br>
+                    <p id="invalidResetPasswordCode">invalid reset password code</p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -14,7 +14,7 @@ module.exports = function(config) {
 				if (req.method == 'GET') {
 					if (pathName == '/') {
 						res.statusCode = 301;
-						res.setHeader('location', '/login.html');
+						res.setHeader('location', '/main.html');
 						res.end();
 						return;
 					}

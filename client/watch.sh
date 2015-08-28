@@ -1,1 +1,1 @@
-watchify main.js -o bundle.js -v
+watchify -t brfs main.js -o bundle.js -v
