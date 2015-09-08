@@ -4,6 +4,12 @@ var http = require('http');
 var path = require('path');
 var url = require('url');
 
+var redirect = function(res, path) {
+	res.statusCode = 301;
+	res.setHeader('location', path);
+	res.end();
+};
+
 module.exports = function(config) {
 	var api = require('./api')(config);
 	var server;
@@ -13,9 +19,11 @@ module.exports = function(config) {
 				var pathName = url.parse(req.url).pathname;
 				if (req.method == 'GET') {
 					if (pathName == '/') {
-						res.statusCode = 301;
-						res.setHeader('location', '/main.html');
-						res.end();
+						redirect(res, '/main.html');
+						return;
+					}
+					if (pathName.match(/\/$/)) {
+						redirect(res, pathName.replace(/\/$/, ''));
 						return;
 					}
 					fs.readFile(path.join('../client/', pathName), 'utf8', function(err, data) {
