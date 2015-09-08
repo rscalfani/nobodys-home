@@ -1,6 +1,7 @@
 //TODO HANDLE API ERR RETURNS {err: 'message'}
 
 var changePassword = require('./changePassword');
+var configuration = require('./configuration');
 
 var isFormFilled = function(selector) {
 	var formFilled = true;
@@ -35,7 +36,7 @@ var createLoginHandlers = function() {
 	$('#currentPassword, #newPassword, #confirmNewPassword').keyup(function() {
 		enableSubmitIf(isChangePasswordFormValid(), '#changePasswordModal');
 		if ($('#newPassword').val() == $('#confirmNewPassword').val())
-			$('#mismatchingPasswords').css('display', 'none');
+			$('#mismatchingPasswords').hide();
 		else
 			$('#mismatchingPasswords').css('display', 'block');
 	});
@@ -62,8 +63,11 @@ var createLoginHandlers = function() {
 				if (result.auth) {
 					if (result.changePassword)
 						changePassword.show();
-					else
-						hide();
+					else {
+						//hide(); //TODO cleanup
+						window.location = 'main.html#webServer';
+						//configuration.show();
+					}
 					clearLoginBox();
 					clearResetPasswordModal();
 				}
@@ -134,13 +138,13 @@ var createResetPasswordHandlers = function() {
 var clearLoginBox = function() {
 	$('#loginForm').trigger('reset');
 	$('#loginBox input[type="submit"]').prop('disabled', 'disabled');
-	$('#loginError').css('display', 'none');
+	$('#loginError').hide();
 };
 
 var clearResetPasswordModal = function() {
 	$('#resetPasswordModal form').trigger('reset');
 	$('#resetPasswordModal form input[type="submit"]').prop('disabled', 'disabled');
-	$('#invalidResetPasswordCode').css('display', 'none');
+	$('#invalidResetPasswordCode').hide();
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 var init = function() {
@@ -148,18 +152,12 @@ var init = function() {
 	createResetPasswordHandlers();
 };
 
-var show = function() {
+var clear = function() {
 	clearLoginBox();
-	$('#loginBox').show();
-};
-
-var hide = function() {
-	$('#loginBox').hide();
-	clearLoginBox();
+	document.title = 'Nobody\'s Home | Login';
 };
 
 module.exports = {
 	init: init,
-	show: show,
-	hide: hide
+	clear: clear
 };

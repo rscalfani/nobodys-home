@@ -52,7 +52,7 @@ module.exports = function(config) {
 		changePassword: co.wrap(function*(changePasswordObj) {
 			try {
 				var err = {};
-				if (changePasswordObj.newPassword == defaultPasswordHash)
+				if (hash(changePasswordObj.newPassword) == defaultPasswordHash)
 					err.invalidNewPassword = true;
 				if ((yield getPasswordHash()) != hash(changePasswordObj.oldPassword))
 					err.invalidOldPassword = true;

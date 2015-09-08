@@ -58,8 +58,8 @@ var changePassword = function(event) {
 		data: JSON.stringify(changePassword)
 	})
 		.then(function(result) {
-			$('#invalidCurrentPassword').css('display', 'none');
-			$('#invalidNewPassword').css('display', 'none');
+			$('#invalidCurrentPassword').hide();
+			$('#invalidNewPassword').hide();
 			if (result.invalidOldPassword)
 				$('#invalidCurrentPassword').css('display', 'block');
 			if (result.invalidNewPassword)
