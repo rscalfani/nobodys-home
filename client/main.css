@@ -78,15 +78,59 @@
   color: red;
   display: none;
 }
-#configuration #configurationTitle {
-  margin-bottom: 0px;
-  margin-left: 10px;
-  margin-right: 30px;
+#configuration {
+  margin-left: 25%;
+  margin-right: 25%;
+}
+#configuration .nav #configurationTitle {
+  padding-bottom: 0px;
+  padding-right: 30px;
   font-size: 200%;
 }
-#configuration a .active {
-  color: green;
+#configuration .nav .active a {
+  color: #333;
 }
-#configuration a .inactive {
-  color: yellow;
+#configuration .nav li a {
+  color: #646464;
+}
+#configuration .tab-content #webServer input[type="submit"] {
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+}
+#configuration .tab-content #webServer input[value="Change Password"] {
+  font-size: 230%;
+}
+#configuration .tab-content #simulator,
+#configuration .tab-content #automation {
+  font-size: 120%;
+}
+#configuration .tab-content #simulator .instruction,
+#configuration .tab-content #automation .instruction {
+  padding-bottom: 10px;
+}
+#configuration .tab-content #simulator .example,
+#configuration .tab-content #automation .example {
+  padding-bottom: 10px;
+  font-style: italic;
+}
+#configuration .tab-content #simulator table {
+  margin-bottom: 15px;
+}
+#configuration .tab-content #simulator table input {
+  border: 0px;
+  outline: none;
+  width: 140px;
+}
+#configuration .tab-content #automation #automationForm #endHour {
+  margin-left: 6px;
+}
+#configuration .tab-content #automation #automationForm input[type="submit"] {
+  position: fixed;
+  left: 30%;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  margin-top: 15px;
 }

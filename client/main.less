@@ -101,20 +101,84 @@
 }
 
 #configuration {
-	#configurationTitle {
-		margin-bottom: 0px;
-		margin-left: 10px;
-		margin-right: 30px;
-		font-size: 200%;
-	}
+	margin-left: 25%;
+	margin-right: 25%;
 
-	a {
-		.active {
-			color: green;
+	.nav {
+		#configurationTitle {
+			padding-bottom: 0px;
+			padding-right: 30px;
+			font-size: 200%;
 		}
 
-		.inactive {
-			color: yellow;
+		.active {
+			a {
+				color: #333;
+			}
+		}
+
+		li {
+			a {
+				color: #646464;
+			}
+		}
+	}
+
+	.tab-content {
+		#webServer {
+			input[type="submit"] {
+				position: fixed;
+				top: 20%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				-webkit-transform: translate(-50%, -50%);
+			}
+
+			input[value="Change Password"] {
+				font-size: 230%;
+			}
+		}
+
+		#simulator, #automation {
+			//padding-left: 45px;
+			font-size: 120%;
+
+			.instruction {
+				padding-bottom: 10px;
+			}
+
+			.example {
+				padding-bottom: 10px;
+				font-style: italic;
+			}
+		}
+
+		#simulator {
+			table {
+				margin-bottom: 15px;
+
+				input {
+					border: 0px;
+					outline: none;
+					width: 140px;
+				}
+			}
+		}
+
+		#automation {
+			#automationForm {
+				#endHour {
+					margin-left: 6px;
+				}
+
+				input[type="submit"] {
+					position: fixed;
+					left: 30%;
+					transform: translate(-50%, -50%);
+					-webkit-transform: translate(-50%, -50%);
+					margin-top: 15px;
+				}
+			}
 		}
 	}
 }

@@ -1,0 +1,102 @@
+<div id="configuration" class="screen" style="display: none">
+    <ul class="nav nav-tabs"><br>
+        <li id="configurationTitle">Configuration</li>
+        <li class="active"><a href="#webServer">Web Server</a></li>
+        <li><a href="#simulator">Simulator</a></li>
+        <li><a href="#automation">Automation</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div id="webServer" class="tab-pane fade in active">
+            <input type="submit" value="Change Password"/>
+        </div>
+
+        <div id="simulator" class="tab-pane fade">
+            <form id="simulatorForm">
+                <br><p class="instruction">Enter the name of each lit area, how many times or occurrences per day that each area is lit, & the duration (per each occurrence) that each area is lit.</p>
+                <!--REMEMBER TO ADD ID TO INSTRUCTION ^-->
+                <p class="example">example: (give example)</p>
+
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Occurrences</th>
+                            <th>Duration</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td><input class="text" type="text"/></td>
+                            <td><input class="text" type="text"/></td>
+                            <td><input class="text" type="text"/></td>
+                            <td><input class="text" type="text"/></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><input class="text" type="text"/></td>
+                            <td><input class="text" type="text"/></td>
+                            <td><input class="text" type="text"/></td>
+                            <td><input class="text" type="text"/></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><input class="text" type="text"/></td>
+                            <td><input class="text" type="text"/></td>
+                            <td><input class="text" type="text"/></td>
+                            <td><input class="text" type="text"/></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><input class="text" type="text"/></td>
+                            <td><input class="text" type="text"/></td>
+                            <td><input class="text" type="text"/></td>
+                            <td><input class="text" type="text"/></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <button id= "addButton" type="button" class="btn btn-default btn-sm">
+                    add more rows
+                </button>
+            </form>
+        </div>
+
+        <div id="automation" class="tab-pane fade">
+
+            <form id="automationForm">
+                <br><p class="instruction">Enter the times that Nobody's Home starts & ends.</p>
+
+                <span>Starts at</span>
+                <input class="text" type="text" size="2" maxlength="2"/>
+                :
+                <input class="text" type="text" size="2" maxlength="2"/>
+                <select>
+                    <option>AM</option>
+                    <option>PM</option>
+                </select><br><br>
+
+                <span>Ends at</span>
+                <input id="endHour" class="text" type="text" size="2" maxlength="2"/>
+                :
+                <input class="text" type="text" size="2" maxlength="2"/>
+                <select>
+                    <option>AM</option>
+                    <option>PM</option>
+                </select><br><br>
+
+                <p class="instruction">Which hardware are you using?</p>
+
+                <select>
+                    <option>This hardware</option>
+                    <option>The other hardware</option>
+                </select><br><br>
+
+                <input type="submit" value="Save"/>
+            </form>
+        </div>
+    </div>
+</div>
