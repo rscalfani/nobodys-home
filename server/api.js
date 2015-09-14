@@ -12,7 +12,7 @@ var defaultPasswordHash = hash('password');
 
 module.exports = function(config) {
 	var getPasswordHash = co.wrap(function*() {
-		try {
+		try { //TODO does every function need a try catch
 			return yield pfs.readFileAsync(config.ws.passwordLoc);
 		}
 		catch(err) {
@@ -67,7 +67,7 @@ module.exports = function(config) {
 				return {err: err.message};
 			}
 		}),
-		generateResetPasswordCode: co.wrap(function*(generateObj) {
+		generateResetPasswordCode: co.wrap(function*() {
 			try {
 				var randomizeThree = function() {
 					var randomThree = '';
@@ -111,6 +111,18 @@ module.exports = function(config) {
 			catch(err) {
 				return {err: err.message};
 			}
+		}),
+		saveSimulator: co.wrap(function*(simulatorObj) {
+			yield pfs.writeFileAsync(config.ws.simulatorLoc, JSON.stringify(simulatorObj));
+		}),
+		saveAutomation: co.wrap(function*(automationObj) {
+			yield pfs.writeFileAsync(config.ws.automationLoc, JSON.stringify(automationObj));
+		}),
+		loadSimulator: co.wrap(function*() {
+			return (yield pfs.readFileAsync(config.ws.simulatorLoc)).toString();
+		}),
+		loadAutomation: co.wrap(function*() {
+			return (yield pfs.readFileAsync(config.ws.automationLoc)).toString();
 		})
 	}
 };

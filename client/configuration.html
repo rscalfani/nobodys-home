@@ -30,31 +30,31 @@
                     <tbody>
                         <tr>
                             <td></td>
-                            <td><input class="text" type="text"/></td>
-                            <td><input class="text" type="text"/></td>
-                            <td><input class="text" type="text"/></td>
-                            <td><input class="text" type="text"/></td>
+                            <td><input name="id" class="text" type="text"/></td>
+                            <td><input name="name" class="text" type="text"/></td>
+                            <td><input name="occurrences" class="text" type="text"/></td>
+                            <td><input name="duration" class="text" type="text"/></td>
                         </tr>
                         <tr>
                             <td></td>
-                            <td><input class="text" type="text"/></td>
-                            <td><input class="text" type="text"/></td>
-                            <td><input class="text" type="text"/></td>
-                            <td><input class="text" type="text"/></td>
+                            <td><input name="id" class="text" type="text"/></td>
+                            <td><input name="name" class="text" type="text"/></td>
+                            <td><input name="occurrences" class="text" type="text"/></td>
+                            <td><input name="duration" class="text" type="text"/></td>
                         </tr>
                         <tr>
                             <td></td>
-                            <td><input class="text" type="text"/></td>
-                            <td><input class="text" type="text"/></td>
-                            <td><input class="text" type="text"/></td>
-                            <td><input class="text" type="text"/></td>
+                            <td><input name="id" class="text" type="text"/></td>
+                            <td><input name="name" class="text" type="text"/></td>
+                            <td><input name="occurrences" class="text" type="text"/></td>
+                            <td><input name="duration" class="text" type="text"/></td>
                         </tr>
                         <tr>
                             <td></td>
-                            <td><input class="text" type="text"/></td>
-                            <td><input class="text" type="text"/></td>
-                            <td><input class="text" type="text"/></td>
-                            <td><input class="text" type="text"/></td>
+                            <td><input name="id" class="text" type="text"/></td>
+                            <td><input name="name" class="text" type="text"/></td>
+                            <td><input name="occurrences" class="text" type="text"/></td>
+                            <td><input name="duration" class="text" type="text"/></td>
                         </tr>
                     </tbody>
                 </table>
@@ -62,6 +62,8 @@
                 <button id= "addButton" type="button" class="btn btn-default btn-sm">
                     add more rows
                 </button>
+
+                <input type="submit" value="Save"/>
             </form>
         </div>
 
@@ -71,10 +73,10 @@
                 <br><p class="instruction">Enter the times that Nobody's Home starts & ends.</p>
 
                 <span>Starts at</span>
-                <input class="text" type="text" size="2" maxlength="2"/>
+                <input id="startHour" class="text" type="text" size="2" maxlength="2"/>
                 :
-                <input class="text" type="text" size="2" maxlength="2"/>
-                <select>
+                <input id="startMinutes" class="text" type="text" size="2" maxlength="2"/>
+                <select id="startSelect">
                     <option>AM</option>
                     <option>PM</option>
                 </select><br><br>
@@ -82,15 +84,15 @@
                 <span>Ends at</span>
                 <input id="endHour" class="text" type="text" size="2" maxlength="2"/>
                 :
-                <input class="text" type="text" size="2" maxlength="2"/>
-                <select>
+                <input id="endMinutes" class="text" type="text" size="2" maxlength="2"/>
+                <select id="endSelect">
                     <option>AM</option>
                     <option>PM</option>
                 </select><br><br>
 
                 <p class="instruction">Which hardware are you using?</p>
 
-                <select>
+                <select id="hardwareSelect">
                     <option>This hardware</option>
                     <option>The other hardware</option>
                 </select><br><br>
