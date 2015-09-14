@@ -33,9 +33,7 @@ $('document').ready(function() {
 
 	var goToConfig = function() {
 		hideEverything();
-		var tab = window.location.hash;
-		$('a[href="' + tab + '"]').tab('show');
-		$('#configuration').show();
+		configuration.show();
 	};
 
 	var routes = {
@@ -48,7 +46,7 @@ $('document').ready(function() {
 
 	router.configure({
 		notfound: function() {
-			alert('not found');
+			//alert('not found'); TODO remove after testing?
 			window.location = 'main.html';
 		},
 		on: function() {

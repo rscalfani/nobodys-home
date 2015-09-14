@@ -63,11 +63,8 @@ var createLoginHandlers = function() {
 				if (result.auth) {
 					if (result.changePassword)
 						changePassword.show();
-					else {
-						//hide(); //TODO cleanup
+					else
 						window.location = 'main.html#webServer';
-						//configuration.show();
-					}
 					clearLoginBox();
 					clearResetPasswordModal();
 				}
