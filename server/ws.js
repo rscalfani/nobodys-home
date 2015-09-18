@@ -3,6 +3,8 @@ var fs = require('fs');
 var http = require('http');
 var path = require('path');
 var url = require('url');
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+var session = require('./session');
 
 var redirect = function(res, path) {
 	res.statusCode = 301;
@@ -46,8 +48,16 @@ module.exports = function(config) {
 					req.on('end', co.wrap(function*() {
 						var apiObj = JSON.parse(body);
 						res.setHeader('Content-Type', 'application/json');
-						if(api[apiObj.func])
-							res.write(JSON.stringify(yield api[apiObj.func](apiObj)));
+						if(api[apiObj.func]) {
+							if (apiObj.func != 'login') {
+								if(!session.checkSession(req)) {
+									res.write(JSON.stringify({invalidSession: true}));
+									res.end();
+									return;
+								}
+							}
+							res.write(JSON.stringify(yield api[apiObj.func](apiObj, req, res)));
+						}
 						else
 							res.write(JSON.stringify({err: 'function does not exist'}));
 						res.end();

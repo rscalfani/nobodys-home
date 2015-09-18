@@ -1,3 +1,5 @@
+var api = require('./api');
+
 var createChangePasswordHandlers = function() {
 	$('#revealAll').click(function() {
 		if ($('#revealAll').prop('checked'))
@@ -23,7 +25,7 @@ var showResetPasswordCodeModal = function() {
 		keyboard: false
 	});
 
-	$.ajax({
+	api({
 		url: '/api',
 		type :'POST',
 		contentType: 'application/json',
@@ -51,7 +53,7 @@ var changePassword = function(event) {
 		oldPassword: $('#currentPassword').val()
 	};
 
-	$.ajax({
+	api({
 		url: '/api',
 		type :'POST',
 		contentType: 'application/json',

@@ -1,8 +1,10 @@
+var api = require('./api');
 var changePassword = require('./changePassword');
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+var emptyRow;
 var simulatorLoaded = false;
 var automationLoaded = false;
-var emptyRow;
+
 var addRow = function() {
 	$('.table tbody').append(emptyRow.clone());
 };
@@ -17,9 +19,24 @@ var createConfigurationHandlers = function() {
 		$(this).tab('show');
 	});
 
-	$('#webServer input[type="submit"]').click(function(event) {
+	$('#webServer input[value="Change Password"]').click(function(event) {
 		event.preventDefault();
 		changePassword.show();
+	});
+
+	$('#webServer input[value="Logout"]').click(function(event) {
+		event.preventDefault();
+		api({
+			url: '/api',
+			type :'POST',
+			contentType: 'application/json',
+			data: JSON.stringify({
+				func: 'logout'
+			})
+		})
+		.then(function() {
+			window.location = '/';
+		});
 	});
 
 	emptyRow = $('.table tbody tr:first-child').clone();
@@ -43,7 +60,7 @@ var createConfigurationHandlers = function() {
 			controllers.push(controller);
 		});
 
-		$.ajax({
+		api({
 			url: '/api',
 			type :'POST',
 			contentType: 'application/json',
@@ -60,7 +77,7 @@ var createConfigurationHandlers = function() {
 	$('#automation input[type="submit"]').click(function(event) {
 		event.preventDefault();
 
-		$.ajax({
+		api({
 			url: '/api',
 			type: 'POST',
 			contentType: 'application/json',
@@ -83,14 +100,13 @@ var createConfigurationHandlers = function() {
 
 var loadSimulator = function() {
 	if (simulatorLoaded == false) {
-		$.ajax({
+		api({
 			url: '/api',
 			type :'POST',
 			contentType: 'application/json',
 			data: JSON.stringify({func: 'loadSimulator'})
 		})
 		.then(function(result) {
-			result = JSON.parse(result);
 			$('#simulatorForm > .table > tbody  > tr').remove();
 			result.configuration.controllers.forEach(function(controller) {
 				addRow();
@@ -107,14 +123,13 @@ var loadSimulator = function() {
 
 var loadAutomation = function() {
 	if (automationLoaded == false) {
-		$.ajax({
+		api({
 			url: '/api',
 			type :'POST',
 			contentType: 'application/json',
 			data: JSON.stringify({func: 'loadAutomation'})
 		})
 		.then(function(result) {
-			result = JSON.parse(result);
 			$('#startHour').val(result.configuration.startHour);
 			$('#startMinutes').val(result.configuration.startMinutes);
 			$('#endHour').val(result.configuration.endHour);

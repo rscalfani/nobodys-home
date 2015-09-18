@@ -1,5 +1,6 @@
 //TODO HANDLE API ERR RETURNS {err: 'message'}
 
+var api = require('./api');
 var changePassword = require('./changePassword');
 var configuration = require('./configuration');
 
@@ -50,7 +51,7 @@ var createLoginHandlers = function() {
 			password: $('#password').val()
 		};
 
-		$.ajax({
+		api({
 			url: '/api',
 			type: 'POST',
 			contentType: 'application/json',
@@ -107,7 +108,7 @@ var createResetPasswordHandlers = function() {
 
 		var code = $('#resetPasswordCode1').val() + $('#resetPasswordCode2').val() + $('#resetPasswordCode3').val();
 
-		$.ajax({
+		api({
 			url: '/api',
 			type :'POST',
 			contentType: 'application/json',
@@ -115,16 +116,13 @@ var createResetPasswordHandlers = function() {
 		})
 		.then(function(result) {
 			if(result.passwordReset){
-				console.log("initiate change password");
 				$('#resetPasswordModal').modal('hide');
 				clearLoginBox();
 				clearResetPasswordModal();
 				changePassword.show();
 			}
-			else {
-				console.log("do not change password");
+			else
 				$('#invalidResetPasswordCode').css('display', 'block');
-			}
 		})
 		.then(null, function(err) {
 			alert(err); //TODO handle errors

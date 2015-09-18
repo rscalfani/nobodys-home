@@ -3,6 +3,8 @@ var crypto = require('crypto');
 var Promise = require('bluebird');
 var pfs = Promise.promisifyAll(require('fs'));
 var R = require('ramda');
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+var session = require('./session');
 
 var hash = function(text) {
 	return crypto.createHmac('sha256', 'nobodyshome').update(text).digest('hex')
@@ -36,14 +38,24 @@ module.exports = function(config) {
 	});
 
 	return {
-		login: co.wrap(function*(loginObj) {
+		login: co.wrap(function*(loginObj, req, res) {
 			try {
 				var passwordHash = yield getPasswordHash();
 				var loginPasswordHash = hash(loginObj.password);
+				res.setHeader('Set-Cookie', session.createSessionCookie());
 				return {
 					auth: loginPasswordHash == passwordHash && loginObj.username == 'admin',
 					changePassword: loginPasswordHash == defaultPasswordHash
 				};
+			}
+			catch(err) {
+				return {err: err.message};
+			}
+		}),
+		logout: co.wrap(function*(logoutObj, req) {
+			try {
+				session.deleteSession(req);
+				return {};
 			}
 			catch(err) {
 				return {err: err.message};
@@ -114,15 +126,17 @@ module.exports = function(config) {
 		}),
 		saveSimulator: co.wrap(function*(simulatorObj) {
 			yield pfs.writeFileAsync(config.ws.simulatorLoc, JSON.stringify(simulatorObj));
+			return {};
 		}),
 		saveAutomation: co.wrap(function*(automationObj) {
 			yield pfs.writeFileAsync(config.ws.automationLoc, JSON.stringify(automationObj));
+			return {};
 		}),
 		loadSimulator: co.wrap(function*() {
-			return (yield pfs.readFileAsync(config.ws.simulatorLoc)).toString();
+			return JSON.parse((yield pfs.readFileAsync(config.ws.simulatorLoc)).toString());
 		}),
 		loadAutomation: co.wrap(function*() {
-			return (yield pfs.readFileAsync(config.ws.automationLoc)).toString();
+			return JSON.parse((yield pfs.readFileAsync(config.ws.automationLoc)).toString());
 		})
 	}
 };

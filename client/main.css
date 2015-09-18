@@ -95,13 +95,17 @@
 }
 #configuration .tab-content #webServer input[type="submit"] {
   position: fixed;
-  top: 20%;
-  left: 50%;
   transform: translate(-50%, -50%);
   -webkit-transform: translate(-50%, -50%);
+  font-size: 230%;
 }
 #configuration .tab-content #webServer input[value="Change Password"] {
-  font-size: 230%;
+  top: 20%;
+  left: 50%;
+}
+#configuration .tab-content #webServer input[value="Logout"] {
+  top: 30%;
+  left: 50%;
 }
 #configuration .tab-content #simulator,
 #configuration .tab-content #automation {
