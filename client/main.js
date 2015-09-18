@@ -46,7 +46,6 @@ $('document').ready(function() {
 
 	router.configure({
 		notfound: function() {
-			//alert('not found'); TODO remove after testing?
 			window.location = 'main.html';
 		},
 		on: function() {
