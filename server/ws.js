@@ -49,7 +49,7 @@ module.exports = function(config) {
 						var apiObj = JSON.parse(body);
 						res.setHeader('Content-Type', 'application/json');
 						if(api[apiObj.func]) {
-							if (apiObj.func != 'login') {
+							if (apiObj.func != 'login' && apiObj.func != 'getResetPasswordCode') {
 								if(!session.checkSession(req)) {
 									res.write(JSON.stringify({invalidSession: true}));
 									res.end();
