@@ -1,5 +1,3 @@
-//TODO HANDLE API ERR RETURNS {err: 'message'}
-
 var api = require('./api');
 var changePassword = require('./changePassword');
 var configuration = require('./configuration');
@@ -58,7 +56,7 @@ var createLoginHandlers = function() {
 			data: JSON.stringify(login)
 		})
 		.then(function(result) {
-			if (result.err) //TODO do I need this? If so, should I put it after the other ajax calls?
+			if (result.err) //TODO should I put this after the other ajax calls?
 				alert(result.err);
 			else {
 				if (result.auth) {
@@ -75,8 +73,8 @@ var createLoginHandlers = function() {
 					alert('Unknown response: ' + JSON.stringify(result));
 			}
 		})
-		.then(null, function(err) {
-			alert(err); //TODO handle errors
+		.then(null, function(jqXHR, textStatus, errorThrown) {
+			alert("Server Communication Error: " + jqXHR.statusText);
 		});
 	});
 };
@@ -124,8 +122,8 @@ var createResetPasswordHandlers = function() {
 			else
 				$('#invalidResetPasswordCode').css('display', 'block');
 		})
-		.then(null, function(err) {
-			alert(err); //TODO handle errors
+		.then(null, function(jqXHR, textStatus, errorThrown) {
+			alert("Server Communication Error: " + jqXHR.statusText);
 		});
 	});
 };

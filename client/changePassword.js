@@ -39,8 +39,8 @@ var showResetPasswordCodeModal = function() {
 			$('#resetPasswordCodeModal input[type="submit"]').prop('disabled', '');
 		}, 5 * 1000);
 	})
-	.then(null, function(err) {
-		alert(err); //TODO handle errors
+	.then(null, function(jqXHR, textStatus, errorThrown) {
+		alert("Server Communication Error: " + jqXHR.statusText);
 	});
 };
 
@@ -59,22 +59,22 @@ var changePassword = function(event) {
 		contentType: 'application/json',
 		data: JSON.stringify(changePassword)
 	})
-		.then(function(result) {
-			$('#invalidCurrentPassword').hide();
-			$('#invalidNewPassword').hide();
-			if (result.invalidOldPassword)
-				$('#invalidCurrentPassword').css('display', 'block');
-			if (result.invalidNewPassword)
-				$('#invalidNewPassword').css('display', 'block');
-			if (result.passwordChanged) {
-				$('#changePasswordModal').modal('hide');
-				clearChangePasswordModal();
-				showResetPasswordCodeModal();
-			}
-		})
-		.then(null, function(err) {
-			alert(err); //TODO handle errors
-		});
+	.then(function(result) {
+		$('#invalidCurrentPassword').hide();
+		$('#invalidNewPassword').hide();
+		if (result.invalidOldPassword)
+			$('#invalidCurrentPassword').css('display', 'block');
+		if (result.invalidNewPassword)
+			$('#invalidNewPassword').css('display', 'block');
+		if (result.passwordChanged) {
+			$('#changePasswordModal').modal('hide');
+			clearChangePasswordModal();
+			showResetPasswordCodeModal();
+		}
+	})
+	.then(null, function(jqXHR, textStatus, errorThrown) {
+		alert("Server Communication Error: " + jqXHR.statusText);
+	});
 };
 
 var clearChangePasswordModal = function() {

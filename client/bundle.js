@@ -9,8 +9,6 @@ module.exports = function(params) {
 	}, deferred.reject);
 	return deferred.promise();
 };
-
-//TODO handle all API without then errs
 },{}],2:[function(require,module,exports){
 
 
@@ -779,8 +777,8 @@ var showResetPasswordCodeModal = function() {
 			$('#resetPasswordCodeModal input[type="submit"]').prop('disabled', '');
 		}, 5 * 1000);
 	})
-	.then(null, function(err) {
-		alert(err); //TODO handle errors
+	.then(null, function(jqXHR, textStatus, errorThrown) {
+		alert("Server Communication Error: " + jqXHR.statusText);
 	});
 };
 
@@ -799,22 +797,22 @@ var changePassword = function(event) {
 		contentType: 'application/json',
 		data: JSON.stringify(changePassword)
 	})
-		.then(function(result) {
-			$('#invalidCurrentPassword').hide();
-			$('#invalidNewPassword').hide();
-			if (result.invalidOldPassword)
-				$('#invalidCurrentPassword').css('display', 'block');
-			if (result.invalidNewPassword)
-				$('#invalidNewPassword').css('display', 'block');
-			if (result.passwordChanged) {
-				$('#changePasswordModal').modal('hide');
-				clearChangePasswordModal();
-				showResetPasswordCodeModal();
-			}
-		})
-		.then(null, function(err) {
-			alert(err); //TODO handle errors
-		});
+	.then(function(result) {
+		$('#invalidCurrentPassword').hide();
+		$('#invalidNewPassword').hide();
+		if (result.invalidOldPassword)
+			$('#invalidCurrentPassword').css('display', 'block');
+		if (result.invalidNewPassword)
+			$('#invalidNewPassword').css('display', 'block');
+		if (result.passwordChanged) {
+			$('#changePasswordModal').modal('hide');
+			clearChangePasswordModal();
+			showResetPasswordCodeModal();
+		}
+	})
+	.then(null, function(jqXHR, textStatus, errorThrown) {
+		alert("Server Communication Error: " + jqXHR.statusText);
+	});
 };
 
 var clearChangePasswordModal = function() {
@@ -878,6 +876,9 @@ var createConfigurationHandlers = function() {
 		})
 		.then(function() {
 			window.location = '/';
+		})
+		.then(null, function(jqXHR, textStatus, errorThrown) {
+			alert("Server Communication Error: " + jqXHR.statusText);
 		});
 	});
 
@@ -912,6 +913,9 @@ var createConfigurationHandlers = function() {
 					controllers: controllers
 				}
 			})
+		})
+		.then(null, function(jqXHR, textStatus, errorThrown) {
+			alert("Server Communication Error: " + jqXHR.statusText);
 		});
 		simulatorLoaded = false;
 	});
@@ -935,6 +939,9 @@ var createConfigurationHandlers = function() {
 					hardware: $('#hardwareSelect').val()
 				}
 			})
+		})
+		.then(null, function(jqXHR, textStatus, errorThrown) {
+			alert("Server Communication Error: " + jqXHR.statusText);
 		});
 		automationLoaded = false;
 	});
@@ -959,6 +966,9 @@ var loadSimulator = function() {
 			numberTable();
 			simulatorLoaded = true;
 			console.log('simulatorLoaded: ' + simulatorLoaded);
+		})
+		.then(null, function(jqXHR, textStatus, errorThrown) {
+			alert("Server Communication Error: " + jqXHR.statusText);
 		});
 	}
 };
@@ -979,6 +989,9 @@ var loadAutomation = function() {
 			$('#startSelect').val(result.configuration.start);
 			$('#endSelect').val(result.configuration.end);
 			$('#hardwareSelect').val(result.configuration.hardware);
+		})
+		.then(null, function(jqXHR, textStatus, errorThrown) {
+			alert("Server Communication Error: " + jqXHR.statusText);
 		});
 		automationLoaded = true;
 		console.log('automationLoaded: ' + automationLoaded);
@@ -1003,8 +1016,6 @@ module.exports = {
 	show: show
 };
 },{"./api":1,"./changePassword":3}],5:[function(require,module,exports){
-//TODO HANDLE API ERR RETURNS {err: 'message'}
-
 var api = require('./api');
 var changePassword = require('./changePassword');
 var configuration = require('./configuration');
@@ -1063,7 +1074,7 @@ var createLoginHandlers = function() {
 			data: JSON.stringify(login)
 		})
 		.then(function(result) {
-			if (result.err) //TODO do I need this? If so, should I put it after the other ajax calls?
+			if (result.err) //TODO should I put this after the other ajax calls?
 				alert(result.err);
 			else {
 				if (result.auth) {
@@ -1080,8 +1091,8 @@ var createLoginHandlers = function() {
 					alert('Unknown response: ' + JSON.stringify(result));
 			}
 		})
-		.then(null, function(err) {
-			alert(err); //TODO handle errors
+		.then(null, function(jqXHR, textStatus, errorThrown) {
+			alert("Server Communication Error: " + jqXHR.statusText);
 		});
 	});
 };
@@ -1129,8 +1140,8 @@ var createResetPasswordHandlers = function() {
 			else
 				$('#invalidResetPasswordCode').css('display', 'block');
 		})
-		.then(null, function(err) {
-			alert(err); //TODO handle errors
+		.then(null, function(jqXHR, textStatus, errorThrown) {
+			alert("Server Communication Error: " + jqXHR.statusText);
 		});
 	});
 };

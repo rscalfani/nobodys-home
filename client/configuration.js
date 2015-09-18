@@ -36,6 +36,9 @@ var createConfigurationHandlers = function() {
 		})
 		.then(function() {
 			window.location = '/';
+		})
+		.then(null, function(jqXHR, textStatus, errorThrown) {
+			alert("Server Communication Error: " + jqXHR.statusText);
 		});
 	});
 
@@ -70,6 +73,9 @@ var createConfigurationHandlers = function() {
 					controllers: controllers
 				}
 			})
+		})
+		.then(null, function(jqXHR, textStatus, errorThrown) {
+			alert("Server Communication Error: " + jqXHR.statusText);
 		});
 		simulatorLoaded = false;
 	});
@@ -93,6 +99,9 @@ var createConfigurationHandlers = function() {
 					hardware: $('#hardwareSelect').val()
 				}
 			})
+		})
+		.then(null, function(jqXHR, textStatus, errorThrown) {
+			alert("Server Communication Error: " + jqXHR.statusText);
 		});
 		automationLoaded = false;
 	});
@@ -117,6 +126,9 @@ var loadSimulator = function() {
 			numberTable();
 			simulatorLoaded = true;
 			console.log('simulatorLoaded: ' + simulatorLoaded);
+		})
+		.then(null, function(jqXHR, textStatus, errorThrown) {
+			alert("Server Communication Error: " + jqXHR.statusText);
 		});
 	}
 };
@@ -137,6 +149,9 @@ var loadAutomation = function() {
 			$('#startSelect').val(result.configuration.start);
 			$('#endSelect').val(result.configuration.end);
 			$('#hardwareSelect').val(result.configuration.hardware);
+		})
+		.then(null, function(jqXHR, textStatus, errorThrown) {
+			alert("Server Communication Error: " + jqXHR.statusText);
 		});
 		automationLoaded = true;
 		console.log('automationLoaded: ' + automationLoaded);
