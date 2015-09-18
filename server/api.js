@@ -14,7 +14,7 @@ var defaultPasswordHash = hash('password');
 
 module.exports = function(config) {
 	var getPasswordHash = co.wrap(function*() {
-		try { //TODO does every function need a try catch
+		try {
 			return yield pfs.readFileAsync(config.ws.passwordLoc);
 		}
 		catch(err) {
@@ -39,90 +39,64 @@ module.exports = function(config) {
 
 	return {
 		login: co.wrap(function*(loginObj, req, res) {
-			try {
-				var passwordHash = yield getPasswordHash();
-				var loginPasswordHash = hash(loginObj.password);
-				res.setHeader('Set-Cookie', session.createSessionCookie());
-				return {
-					auth: loginPasswordHash == passwordHash && loginObj.username == 'admin',
-					changePassword: loginPasswordHash == defaultPasswordHash
-				};
-			}
-			catch(err) {
-				return {err: err.message};
-			}
+			var passwordHash = yield getPasswordHash();
+			var loginPasswordHash = hash(loginObj.password);
+			res.setHeader('Set-Cookie', session.createSessionCookie());
+			return {
+				auth: loginPasswordHash == passwordHash && loginObj.username == 'admin',
+				changePassword: loginPasswordHash == defaultPasswordHash
+			};
 		}),
 		logout: co.wrap(function*(logoutObj, req) {
-			try {
-				session.deleteSession(req);
-				return {};
-			}
-			catch(err) {
-				return {err: err.message};
-			}
+			session.deleteSession(req);
+			return {};
 		}),
 		changePassword: co.wrap(function*(changePasswordObj) {
-			try {
-				var err = {};
-				if (hash(changePasswordObj.newPassword) == defaultPasswordHash)
-					err.invalidNewPassword = true;
-				if ((yield getPasswordHash()) != hash(changePasswordObj.oldPassword))
-					err.invalidOldPassword = true;
-				if (Object.keys(err).length != 0)
-					return err;
-				yield setPasswordHash(changePasswordObj.newPassword);
-				return {
-					passwordChanged: true
-				};
-			}
-			catch(err) {
-				return {err: err.message};
-			}
+			var err = {};
+			if (hash(changePasswordObj.newPassword) == defaultPasswordHash)
+				err.invalidNewPassword = true;
+			if ((yield getPasswordHash()) != hash(changePasswordObj.oldPassword))
+				err.invalidOldPassword = true;
+			if (Object.keys(err).length != 0)
+				return err;
+			yield setPasswordHash(changePasswordObj.newPassword);
+			return {
+				passwordChanged: true
+			};
 		}),
 		generateResetPasswordCode: co.wrap(function*() {
-			try {
-				var randomizeThree = function() {
-					var randomThree = '';
-					for (var i = 0; i < 3; ++i)
-						randomThree += R.toUpper(Math.random().toString(36).substr(2, 1));
-					return randomThree;
-				};
-				var resetPasswordCode = [];
+			var randomizeThree = function() {
+				var randomThree = '';
 				for (var i = 0; i < 3; ++i)
-					resetPasswordCode.push(randomizeThree());
-				var code = R.join('-', resetPasswordCode);
-				yield setCode(R.replace(/-/g, '', code));
-				return {
-					code: code
-				};
-			}
-			catch(err) {
-				return {err: err.message};
-			}
+					randomThree += R.toUpper(Math.random().toString(36).substr(2, 1));
+				return randomThree;
+			};
+			var resetPasswordCode = [];
+			for (var i = 0; i < 3; ++i)
+				resetPasswordCode.push(randomizeThree());
+			var code = R.join('-', resetPasswordCode);
+			yield setCode(R.replace(/-/g, '', code));
+			return {
+				code: code
+			};
 		}),
 		getResetPasswordCode: co.wrap(function*(getObj) {
-			try {
-				var code = (yield getCode()).toString();
-				if (getObj.code.toUpperCase() == code.toUpperCase()) {
-					try {
-						yield pfs.unlinkAsync(config.ws.passwordLoc);
-					}
-					catch(err) {
-						if (err.code != 'ENOENT') {
-							return {err: err.message};
-						}
-					}
-					return {
-						passwordReset: true
-					}
+			var code = (yield getCode()).toString();
+			if (getObj.code.toUpperCase() == code.toUpperCase()) {
+				try {
+					yield pfs.unlinkAsync(config.ws.passwordLoc);
+				}
+				catch(err) {
+					if (err.code != 'ENOENT')
+						throw err;
 				}
 				return {
-					passwordReset: false
-				};
+					passwordReset: true
+				}
 			}
-			catch(err) {
-				return {err: err.message};
-			}
+			return {
+				passwordReset: false
+			};
 		}),
 		saveSimulator: co.wrap(function*(simulatorObj) {
 			yield pfs.writeFileAsync(config.ws.simulatorLoc, JSON.stringify(simulatorObj));

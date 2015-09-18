@@ -56,7 +56,13 @@ module.exports = function(config) {
 									return;
 								}
 							}
-							res.write(JSON.stringify(yield api[apiObj.func](apiObj, req, res)));
+							//call API
+							try {
+								res.write(JSON.stringify(yield api[apiObj.func](apiObj, req, res)));
+							}
+							catch (err) {
+								res.write(JSON.stringify({err: err.message}));
+							}
 						}
 						else
 							res.write(JSON.stringify({err: 'function does not exist'}));
