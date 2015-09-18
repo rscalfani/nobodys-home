@@ -8,5 +8,3 @@ module.exports = function(params) {
 	}, deferred.reject);
 	return deferred.promise();
 };
-
-//TODO handle all API without then errs
