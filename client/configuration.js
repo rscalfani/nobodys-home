@@ -34,7 +34,12 @@ var createConfigurationHandlers = function() {
 				func: 'logout'
 			})
 		})
-		.then(function() {
+		.then(function(result) {
+			if (result.err) {
+				alert(result.err);
+				return;
+			}
+
 			window.location = '/';
 		})
 		.then(null, function(jqXHR, textStatus, errorThrown) {
@@ -74,6 +79,12 @@ var createConfigurationHandlers = function() {
 				}
 			})
 		})
+		.then(function(result) {
+			if (result.err) {
+				alert(result.err);
+				return;
+			}
+		})
 		.then(null, function(jqXHR, textStatus, errorThrown) {
 			alert("Server Communication Error: " + jqXHR.statusText);
 		});
@@ -100,6 +111,12 @@ var createConfigurationHandlers = function() {
 				}
 			})
 		})
+		.then(function(result) {
+			if (result.err) {
+				alert(result.err);
+				return;
+			}
+		})
 		.then(null, function(jqXHR, textStatus, errorThrown) {
 			alert("Server Communication Error: " + jqXHR.statusText);
 		});
@@ -116,6 +133,11 @@ var loadSimulator = function() {
 			data: JSON.stringify({func: 'loadSimulator'})
 		})
 		.then(function(result) {
+			if (result.err) {
+				alert(result.err);
+				return;
+			}
+
 			$('#simulatorForm > .table > tbody  > tr').remove();
 			result.configuration.controllers.forEach(function(controller) {
 				addRow();
@@ -142,6 +164,11 @@ var loadAutomation = function() {
 			data: JSON.stringify({func: 'loadAutomation'})
 		})
 		.then(function(result) {
+			if (result.err) {
+				alert(result.err);
+				return;
+			}
+
 			$('#startHour').val(result.configuration.startHour);
 			$('#startMinutes').val(result.configuration.startMinutes);
 			$('#endHour').val(result.configuration.endHour);

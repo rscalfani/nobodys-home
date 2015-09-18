@@ -56,22 +56,23 @@ var createLoginHandlers = function() {
 			data: JSON.stringify(login)
 		})
 		.then(function(result) {
-			if (result.err) //TODO should I put this after the other ajax calls?
+			if (result.err) {
 				alert(result.err);
-			else {
-				if (result.auth) {
-					if (result.changePassword)
-						changePassword.show();
-					else
-						window.location = 'main.html#webServer';
-					clearLoginBox();
-					clearResetPasswordModal();
-				}
-				else if (result.auth === false)
-					$('#loginError').css('display', 'block');
-				else
-					alert('Unknown response: ' + JSON.stringify(result));
+				return;
 			}
+
+			if (result.auth) {
+				if (result.changePassword)
+					changePassword.show();
+				else
+					window.location = 'main.html#webServer';
+				clearLoginBox();
+				clearResetPasswordModal();
+			}
+			else if (result.auth === false)
+				$('#loginError').css('display', 'block');
+			else
+				alert('Unknown response: ' + JSON.stringify(result));
 		})
 		.then(null, function(jqXHR, textStatus, errorThrown) {
 			alert("Server Communication Error: " + jqXHR.statusText);
@@ -113,6 +114,11 @@ var createResetPasswordHandlers = function() {
 			data: JSON.stringify({func: 'getResetPasswordCode', code: code})
 		})
 		.then(function(result) {
+			if (result.err) {
+				alert(result.err);
+				return;
+			}
+
 			if(result.passwordReset){
 				$('#resetPasswordModal').modal('hide');
 				clearLoginBox();

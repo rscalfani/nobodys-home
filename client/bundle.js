@@ -770,6 +770,11 @@ var showResetPasswordCodeModal = function() {
 		data: JSON.stringify({func: 'generateResetPasswordCode'})
 	})
 	.then(function(result) {
+		if (result.err) {
+			alert(result.err);
+			return;
+		}
+
 		$('#resetPasswordCodeDisplay').val(result.code);
 
 		$('#resetPasswordCodeModal input[type="submit"]').prop('disabled', 'disabled');
@@ -798,6 +803,11 @@ var changePassword = function(event) {
 		data: JSON.stringify(changePassword)
 	})
 	.then(function(result) {
+		if (result.err) {
+			alert(result.err);
+			return;
+		}
+			
 		$('#invalidCurrentPassword').hide();
 		$('#invalidNewPassword').hide();
 		if (result.invalidOldPassword)
@@ -874,7 +884,12 @@ var createConfigurationHandlers = function() {
 				func: 'logout'
 			})
 		})
-		.then(function() {
+		.then(function(result) {
+			if (result.err) {
+				alert(result.err);
+				return;
+			}
+
 			window.location = '/';
 		})
 		.then(null, function(jqXHR, textStatus, errorThrown) {
@@ -914,6 +929,12 @@ var createConfigurationHandlers = function() {
 				}
 			})
 		})
+		.then(function(result) {
+			if (result.err) {
+				alert(result.err);
+				return;
+			}
+		})
 		.then(null, function(jqXHR, textStatus, errorThrown) {
 			alert("Server Communication Error: " + jqXHR.statusText);
 		});
@@ -940,6 +961,12 @@ var createConfigurationHandlers = function() {
 				}
 			})
 		})
+		.then(function(result) {
+			if (result.err) {
+				alert(result.err);
+				return;
+			}
+		})
 		.then(null, function(jqXHR, textStatus, errorThrown) {
 			alert("Server Communication Error: " + jqXHR.statusText);
 		});
@@ -956,6 +983,11 @@ var loadSimulator = function() {
 			data: JSON.stringify({func: 'loadSimulator'})
 		})
 		.then(function(result) {
+			if (result.err) {
+				alert(result.err);
+				return;
+			}
+
 			$('#simulatorForm > .table > tbody  > tr').remove();
 			result.configuration.controllers.forEach(function(controller) {
 				addRow();
@@ -982,6 +1014,11 @@ var loadAutomation = function() {
 			data: JSON.stringify({func: 'loadAutomation'})
 		})
 		.then(function(result) {
+			if (result.err) {
+				alert(result.err);
+				return;
+			}
+
 			$('#startHour').val(result.configuration.startHour);
 			$('#startMinutes').val(result.configuration.startMinutes);
 			$('#endHour').val(result.configuration.endHour);
@@ -1074,22 +1111,23 @@ var createLoginHandlers = function() {
 			data: JSON.stringify(login)
 		})
 		.then(function(result) {
-			if (result.err) //TODO should I put this after the other ajax calls?
+			if (result.err) {
 				alert(result.err);
-			else {
-				if (result.auth) {
-					if (result.changePassword)
-						changePassword.show();
-					else
-						window.location = 'main.html#webServer';
-					clearLoginBox();
-					clearResetPasswordModal();
-				}
-				else if (result.auth === false)
-					$('#loginError').css('display', 'block');
-				else
-					alert('Unknown response: ' + JSON.stringify(result));
+				return;
 			}
+
+			if (result.auth) {
+				if (result.changePassword)
+					changePassword.show();
+				else
+					window.location = 'main.html#webServer';
+				clearLoginBox();
+				clearResetPasswordModal();
+			}
+			else if (result.auth === false)
+				$('#loginError').css('display', 'block');
+			else
+				alert('Unknown response: ' + JSON.stringify(result));
 		})
 		.then(null, function(jqXHR, textStatus, errorThrown) {
 			alert("Server Communication Error: " + jqXHR.statusText);
@@ -1131,6 +1169,11 @@ var createResetPasswordHandlers = function() {
 			data: JSON.stringify({func: 'getResetPasswordCode', code: code})
 		})
 		.then(function(result) {
+			if (result.err) {
+				alert(result.err);
+				return;
+			}
+
 			if(result.passwordReset){
 				$('#resetPasswordModal').modal('hide');
 				clearLoginBox();

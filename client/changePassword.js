@@ -32,6 +32,11 @@ var showResetPasswordCodeModal = function() {
 		data: JSON.stringify({func: 'generateResetPasswordCode'})
 	})
 	.then(function(result) {
+		if (result.err) {
+			alert(result.err);
+			return;
+		}
+
 		$('#resetPasswordCodeDisplay').val(result.code);
 
 		$('#resetPasswordCodeModal input[type="submit"]').prop('disabled', 'disabled');
@@ -60,6 +65,11 @@ var changePassword = function(event) {
 		data: JSON.stringify(changePassword)
 	})
 	.then(function(result) {
+		if (result.err) {
+			alert(result.err);
+			return;
+		}
+			
 		$('#invalidCurrentPassword').hide();
 		$('#invalidNewPassword').hide();
 		if (result.invalidOldPassword)
