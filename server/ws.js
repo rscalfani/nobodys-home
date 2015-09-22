@@ -19,15 +19,19 @@ module.exports = function(config) {
 		start: function() {
 			server = http.createServer(function(req, res) {
 				var pathName = url.parse(req.url).pathname;
+				//static page handling
 				if (req.method == 'GET') {
+					//redirect to default path
 					if (pathName == '/') {
 						redirect(res, '/main.html');
 						return;
 					}
+					//remove trailing slashes via redirect
 					if (pathName.match(/\/$/)) {
 						redirect(res, pathName.replace(/\/$/, ''));
 						return;
 					}
+					//get resource from client folder
 					fs.readFile(path.join('../client/', pathName), 'utf8', function(err, data) {
 						if (err) {
 							console.log(err);
@@ -40,6 +44,7 @@ module.exports = function(config) {
 						res.end();
 					});
 				}
+				//api handling
 				else if (req.method == 'POST' && pathName == '/api') {
 					var body = '';
 					req.on('data', function(chunk) {
@@ -48,8 +53,10 @@ module.exports = function(config) {
 					req.on('end', co.wrap(function*() {
 						var apiObj = JSON.parse(body);
 						res.setHeader('Content-Type', 'application/json');
+						//check if requested function exists
 						if(api[apiObj.func]) {
-							if (apiObj.func != 'login' && apiObj.func != 'getResetPasswordCode') {
+							//check for valid session (except for login & reset password)
+							if (apiObj.func != 'login' && apiObj.func != 'resetPassword') {
 								if(!session.checkSession(req)) {
 									res.write(JSON.stringify({invalidSession: true}));
 									res.end();
@@ -58,7 +65,7 @@ module.exports = function(config) {
 							}
 							//call API
 							try {
-								res.write(JSON.stringify(yield api[apiObj.func](apiObj, req, res)));
+								res.write(JSON.stringify((yield api[apiObj.func](apiObj, req, res)) || {}));
 							}
 							catch (err) {
 								res.write(JSON.stringify({err: err.message}));
@@ -74,8 +81,8 @@ module.exports = function(config) {
 					res.end();
 				}
 			});
-			server.listen(8080, function() {
-				console.log('server is running');
+			server.listen(8080, function() { //TODO move port to config
+				console.log('server is running'); //TODO log to file
 			});
 		},
 		stop: function() {

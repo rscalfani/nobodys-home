@@ -20,36 +20,23 @@ var createConfigurationHandlers = function() {
 	});
 
 	$('#webServer input[value="Change Password"]').click(function(event) {
-		event.preventDefault();
 		changePassword.show();
 	});
 
 	$('#webServer input[value="Logout"]').click(function(event) {
-		event.preventDefault();
-		api({
-			url: '/api',
-			type :'POST',
-			contentType: 'application/json',
-			data: JSON.stringify({
-				func: 'logout'
-			})
-		})
+		api({func: 'logout'})
 		.then(function(result) {
 			if (result.err) {
 				alert(result.err);
 				return;
 			}
 
-			window.location = '/';
+			window.location = '#';
 		})
 		.then(null, function(jqXHR, textStatus, errorThrown) {
 			alert("Server Communication Error: " + jqXHR.statusText);
 		});
 	});
-
-	emptyRow = $('.table tbody tr:first-child').clone();
-
-	numberTable();
 
 	$('#addButton').click(function() {
 		for (var i = 0; i < 3; ++i)
@@ -59,95 +46,37 @@ var createConfigurationHandlers = function() {
 
 	$('#simulator input[type="submit"]').click(function(event) {
 		event.preventDefault();
-		var controllers = [];
-		$('#simulatorForm tbody tr').each(function() {
-			var controller = {};
-			$(this).find('td input').each(function() {
-				controller[$(this).attr('name')] = $(this).val();
-			});
-			controllers.push(controller);
-		});
-
-		api({
-			url: '/api',
-			type :'POST',
-			contentType: 'application/json',
-			data: JSON.stringify({
-				func: 'saveSimulator',
-				configuration: {
-					controllers: controllers
-				}
-			})
-		})
-		.then(function(result) {
-			if (result.err) {
-				alert(result.err);
-				return;
-			}
-		})
-		.then(null, function(jqXHR, textStatus, errorThrown) {
-			alert("Server Communication Error: " + jqXHR.statusText);
-		});
-		simulatorLoaded = false;
+		saveSimulator();
 	});
 
 	$('#automation input[type="submit"]').click(function(event) {
 		event.preventDefault();
-
-		api({
-			url: '/api',
-			type: 'POST',
-			contentType: 'application/json',
-			data: JSON.stringify({
-				func: 'saveAutomation',
-				configuration: {
-					startHour: $('#startHour').val(),
-					startMinutes: $('#startMinutes').val(),
-					endHour: $('#endHour').val(),
-					endMinutes: $('#endMinutes').val(),
-					start: $('#startSelect').val(),
-					end: $('#endSelect').val(),
-					hardware: $('#hardwareSelect').val()
-				}
-			})
-		})
-		.then(function(result) {
-			if (result.err) {
-				alert(result.err);
-				return;
-			}
-		})
-		.then(null, function(jqXHR, textStatus, errorThrown) {
-			alert("Server Communication Error: " + jqXHR.statusText);
-		});
-		automationLoaded = false;
+		saveAutomation();
 	});
 };
 
 var loadSimulator = function() {
 	if (simulatorLoaded == false) {
-		api({
-			url: '/api',
-			type :'POST',
-			contentType: 'application/json',
-			data: JSON.stringify({func: 'loadSimulator'})
-		})
+		api({func: 'loadSimulator'})
 		.then(function(result) {
 			if (result.err) {
 				alert(result.err);
 				return;
 			}
 
-			$('#simulatorForm > .table > tbody  > tr').remove();
-			result.configuration.controllers.forEach(function(controller) {
-				addRow();
-				$('#simulatorForm > .table > tbody  > tr:last-child > td > input').each(function() {
-					$(this).val(controller[$(this).attr('name')]);
+			if (result.configuration) {
+				$('#simulatorForm > .table > tbody  > tr').remove();
+				result.configuration.controllers.forEach(function(controller) {
+					addRow();
+					//for each column in the new row, insert controller values
+					$('#simulatorForm > .table > tbody  > tr:last-child > td > input').each(function() {
+						$(this).val(controller[$(this).attr('name')]);
+					});
 				});
-			});
+			}
 			numberTable();
 			simulatorLoaded = true;
-			console.log('simulatorLoaded: ' + simulatorLoaded);
+			//console.log('simulatorLoaded: ' + simulatorLoaded);
 		})
 		.then(null, function(jqXHR, textStatus, errorThrown) {
 			alert("Server Communication Error: " + jqXHR.statusText);
@@ -155,38 +84,87 @@ var loadSimulator = function() {
 	}
 };
 
+var saveSimulator = function() {
+	var controllers = [];
+	$('#simulatorForm tbody tr').each(function() {
+		var controller = {};
+		$(this).find('td input').each(function() {
+			controller[$(this).attr('name')] = $(this).val();
+		});
+		controllers.push(controller);
+	});
+
+	api({
+		func: 'saveSimulator',
+		configuration: {
+			controllers: controllers
+		}
+	})
+	.then(function(result) {
+		if (result.err) {
+			alert(result.err);
+			return;
+		}
+	})
+	.then(null, function(jqXHR, textStatus, errorThrown) {
+		alert("Server Communication Error: " + jqXHR.statusText);
+	});
+};
+
 var loadAutomation = function() {
 	if (automationLoaded == false) {
-		api({
-			url: '/api',
-			type :'POST',
-			contentType: 'application/json',
-			data: JSON.stringify({func: 'loadAutomation'})
-		})
+		api({func: 'loadAutomation'})
 		.then(function(result) {
 			if (result.err) {
 				alert(result.err);
 				return;
 			}
 
-			$('#startHour').val(result.configuration.startHour);
-			$('#startMinutes').val(result.configuration.startMinutes);
-			$('#endHour').val(result.configuration.endHour);
-			$('#endMinutes').val(result.configuration.endMinutes);
-			$('#startSelect').val(result.configuration.start);
-			$('#endSelect').val(result.configuration.end);
-			$('#hardwareSelect').val(result.configuration.hardware);
+			if (result.configuration) {
+				Object.keys(result.configuration).forEach(function(key) {
+					$('#' + key).val(result.configuration[key]);
+				});
+			}
 		})
 		.then(null, function(jqXHR, textStatus, errorThrown) {
 			alert("Server Communication Error: " + jqXHR.statusText);
 		});
 		automationLoaded = true;
-		console.log('automationLoaded: ' + automationLoaded);
+		//console.log('automationLoaded: ' + automationLoaded);
 	}
+};
+
+var saveAutomation = function() {
+	var configuration = {};
+	[	'startHour',
+		'startMinutes',
+		'endHour',
+		'endMinutes',
+		'startSelect',
+		'endSelect',
+		'hardwareSelect'
+	].forEach(function(id) {
+			configuration[id] = $('#' + id).val();
+		});
+	api({
+		func: 'saveAutomation',
+		configuration: configuration
+	})
+	.then(function(result) {
+		if (result.err) {
+			alert(result.err);
+			return;
+		}
+	})
+	.then(null, function(jqXHR, textStatus, errorThrown) {
+		alert("Server Communication Error: " + jqXHR.statusText);
+	});
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 var init = function() {
 	createConfigurationHandlers();
+	emptyRow = $('.table tbody tr:first-child').clone();
+	numberTable();
 };
 
 var show = function() {

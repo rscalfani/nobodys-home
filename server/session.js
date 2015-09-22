@@ -14,17 +14,14 @@ var session = {
 	createSessionCookie: function() {
 		deleteOldSessions();
 		var uuid = uuidMod.v4();
-		sessions[uuid] = {expirationDate: Date.now() + 86400000};
+		sessions[uuid] = {expirationDate: Date.now() + 86400000}; //TODO move to config as sessionTimeout
 		return uuid;
 	},
 	checkSession: function(req) {
 		deleteOldSessions();
-		console.log('cookie:' , req.headers.cookie);
-		console.log('session:' , sessions[req.headers.cookie]);
 		return sessions[req.headers.cookie];
 	},
 	deleteSession: function(req) {
-		console.log('this session', sessions[req.headers.cookie]);
 		delete sessions[req.headers.cookie];
 	}
 };

@@ -1,8 +1,13 @@
-module.exports = function(params) {
+module.exports = function(apiObj) {
 	var deferred = $.Deferred();
-	$.ajax(params).then(function(result) {
+	$.ajax({
+		url: '/api',
+		type :'POST',
+		contentType: 'application/json',
+		data: JSON.stringify(apiObj)
+	}).then(function(result) {
 		if (result.invalidSession)
-			window.location = '/';
+			window.location = '#';
 		else
 			deferred.resolve(result);
 	}, deferred.reject);

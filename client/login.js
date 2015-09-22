@@ -13,9 +13,9 @@ var isFormFilled = function(selector) {
 
 var disableSubmitIf = function(value, id) {
 	if (value)
-		$(id + ' form input[type="submit"]').prop('disabled', 'disabled');
+		$(id + ' form input[type="submit"]').prop('disabled', true);
 	else
-		$(id + ' form input[type="submit"]').prop('disabled', '');
+		$(id + ' form input[type="submit"]').prop('disabled', false);
 };
 
 var enableSubmitIf = function(value, id) {
@@ -43,17 +43,10 @@ var createLoginHandlers = function() {
 	$('#loginBox input[type="submit"]').click(function(event) {
 		event.preventDefault();
 
-		var login = {
+		api({
 			func: 'login',
 			username: $('#username').val(),
 			password: $('#password').val()
-		};
-
-		api({
-			url: '/api',
-			type: 'POST',
-			contentType: 'application/json',
-			data: JSON.stringify(login)
 		})
 		.then(function(result) {
 			if (result.err) {
@@ -65,7 +58,8 @@ var createLoginHandlers = function() {
 				if (result.changePassword)
 					changePassword.show();
 				else
-					window.location = 'main.html#webServer';
+					window.location = '#webServer';
+				//clear login info for security
 				clearLoginBox();
 				clearResetPasswordModal();
 			}
@@ -96,10 +90,7 @@ var createResetPasswordHandlers = function() {
 	});
 
 	$('#resetPasswordCode1, #resetPasswordCode2, #resetPasswordCode3').keyup(function() {
-		if ($('#resetPasswordCode1').val().length == 3 && $('#resetPasswordCode2').val().length == 3 && $('#resetPasswordCode3').val().length == 3)
-			$('#resetPasswordModal form input[type="submit"]').prop('disabled', '');
-		else
-			$('#resetPasswordModal form input[type="submit"]').prop('disabled', 'disabled');
+		enableSubmitIf($('#resetPasswordCode1').val().length == 3 && $('#resetPasswordCode2').val().length == 3 && $('#resetPasswordCode3').val().length == 3, '#resetPasswordModal');
 	});
 
 	$('#resetPasswordModal form input[type="submit"]').click(function() {
@@ -107,12 +98,7 @@ var createResetPasswordHandlers = function() {
 
 		var code = $('#resetPasswordCode1').val() + $('#resetPasswordCode2').val() + $('#resetPasswordCode3').val();
 
-		api({
-			url: '/api',
-			type :'POST',
-			contentType: 'application/json',
-			data: JSON.stringify({func: 'getResetPasswordCode', code: code})
-		})
+		api({func: 'resetPassword', code: code})
 		.then(function(result) {
 			if (result.err) {
 				alert(result.err);
@@ -136,13 +122,13 @@ var createResetPasswordHandlers = function() {
 
 var clearLoginBox = function() {
 	$('#loginForm').trigger('reset');
-	$('#loginBox input[type="submit"]').prop('disabled', 'disabled');
+	$('#loginBox input[type="submit"]').prop('disabled', true);
 	$('#loginError').hide();
 };
 
 var clearResetPasswordModal = function() {
 	$('#resetPasswordModal form').trigger('reset');
-	$('#resetPasswordModal form input[type="submit"]').prop('disabled', 'disabled');
+	$('#resetPasswordModal form input[type="submit"]').prop('disabled', true);
 	$('#invalidResetPasswordCode').hide();
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

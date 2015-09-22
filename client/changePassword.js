@@ -15,6 +15,7 @@ var createResetPasswordCodeHandlers = function() {
 	$('#resetPasswordCodeModal input[type="submit"]').click(function(event) {
 		event.preventDefault();
 		$('#resetPasswordCodeModal').modal('hide');
+		//clear for security
 		$('#resetPasswordCodeDisplay').val('XXX-XXX-XXX');
 	});
 };
@@ -25,12 +26,7 @@ var showResetPasswordCodeModal = function() {
 		keyboard: false
 	});
 
-	api({
-		url: '/api',
-		type :'POST',
-		contentType: 'application/json',
-		data: JSON.stringify({func: 'generateResetPasswordCode'})
-	})
+	api({func: 'generateResetPasswordCode'})
 	.then(function(result) {
 		if (result.err) {
 			alert(result.err);
@@ -39,9 +35,10 @@ var showResetPasswordCodeModal = function() {
 
 		$('#resetPasswordCodeDisplay').val(result.code);
 
-		$('#resetPasswordCodeModal input[type="submit"]').prop('disabled', 'disabled');
+		//dialog cannot be dismissed for 5 seconds so the user reads instructions
+		$('#resetPasswordCodeModal input[type="submit"]').prop('disabled', true);
 		setTimeout(function() {
-			$('#resetPasswordCodeModal input[type="submit"]').prop('disabled', '');
+			$('#resetPasswordCodeModal input[type="submit"]').prop('disabled', false);
 		}, 5 * 1000);
 	})
 	.then(null, function(jqXHR, textStatus, errorThrown) {
@@ -52,17 +49,10 @@ var showResetPasswordCodeModal = function() {
 var changePassword = function(event) {
 	event.preventDefault();
 
-	var changePassword = {
+	api({
 		func: 'changePassword',
 		newPassword: $('#newPassword').val(),
 		oldPassword: $('#currentPassword').val()
-	};
-
-	api({
-		url: '/api',
-		type :'POST',
-		contentType: 'application/json',
-		data: JSON.stringify(changePassword)
 	})
 	.then(function(result) {
 		if (result.err) {
@@ -90,7 +80,7 @@ var changePassword = function(event) {
 var clearChangePasswordModal = function() {
 	$('#changePasswordModal form').trigger('reset');
 	$('#changePasswordModal [type="text"]').prop('type', 'password');
-	$('#changePasswordModal input[type="submit"]').prop('disabled', 'disabled');
+	$('#changePasswordModal input[type="submit"]').prop('disabled', true);
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 var init = function() {
