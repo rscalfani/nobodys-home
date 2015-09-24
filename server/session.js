@@ -1,5 +1,7 @@
 var R = require('ramda');
 var uuidMod = require('node-uuid');
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+var config = require('./config');
 
 var sessions = {};
 
@@ -14,7 +16,7 @@ var session = {
 	createSessionCookie: function() {
 		deleteOldSessions();
 		var uuid = uuidMod.v4();
-		sessions[uuid] = {expirationDate: Date.now() + 86400000}; //TODO move to config as sessionTimeout
+		sessions[uuid] = {expirationDate: Date.now() + config.ws.sessionTimeout};
 		return uuid;
 	},
 	checkSession: function(req) {

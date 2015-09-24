@@ -864,11 +864,11 @@ var createConfigurationHandlers = function() {
 		$(this).tab('show');
 	});
 
-	$('#webServer input[value="Change Password"]').click(function(event) {
+	$('#webServer input[value="Change Password"]').click(function() {
 		changePassword.show();
 	});
 
-	$('#webServer input[value="Logout"]').click(function(event) {
+	$('#webServer input[value="Logout"]').click(function() {
 		api({func: 'logout'})
 		.then(function(result) {
 			if (result.err) {
