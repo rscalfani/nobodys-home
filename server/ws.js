@@ -81,12 +81,12 @@ module.exports = function(config) {
 					res.end();
 				}
 			});
-			server.listen(8080, function() { //TODO move port to config
+			server.listen(config.ws.port, function() {
 				console.log('server is running'); //TODO log to file
 			});
 		},
 		stop: function() {
-			//TODO write
+			server.close;
 		}
 	};
 };
