@@ -21,10 +21,7 @@ var createResetPasswordCodeHandlers = function() {
 };
 
 var showResetPasswordCodeModal = function() {
-	$('#resetPasswordCodeModal').modal({
-		backdrop: 'static',
-		keyboard: false
-	});
+	$('#resetPasswordCodeModal').modal();
 
 	api({func: 'generateResetPasswordCode'})
 	.then(function(result) {
@@ -89,10 +86,7 @@ var init = function() {
 };
 
 var show = function() {
-	$('#changePasswordModal').modal({
-		backdrop: 'static',
-		keyboard: false
-	});
+	$('#changePasswordModal').modal();
 };
 
 module.exports = {
