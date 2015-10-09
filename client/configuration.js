@@ -2,8 +2,8 @@ var api = require('./api');
 var changePassword = require('./changePassword');
 
 var emptyRow;
-var simulatorLoaded = false;
-var automationLoaded = false;
+var simulatorLoaded;
+var automationLoaded;
 
 var addRow = function() {
 	$('.table tbody').append(emptyRow.clone());
@@ -56,7 +56,7 @@ var createConfigurationHandlers = function() {
 };
 
 var loadSimulator = function() {
-	if (simulatorLoaded == false) {
+	if (!simulatorLoaded) {
 		api({func: 'loadSimulator'})
 		.then(function(result) {
 			if (result.err) {
@@ -94,6 +94,18 @@ var saveSimulator = function() {
 		controllers.push(controller);
 	});
 
+	var valid = controllers.every(function(controller) {
+		return controller.minutes <= 23 * 60;
+	});
+
+	if (!valid) {
+		console.log('cannot be greater than 23 hours'); //TODO display err
+		$('#invalid').css('display', 'block');
+		return;
+	}
+
+	$('#invalid').css('display', '');
+
 	api({
 		func: 'saveSimulator',
 		configuration: {
@@ -112,7 +124,7 @@ var saveSimulator = function() {
 };
 
 var loadAutomation = function() {
-	if (automationLoaded == false) {
+	if (!automationLoaded) {
 		api({func: 'loadAutomation'})
 		.then(function(result) {
 			if (result.err) {
@@ -141,8 +153,8 @@ var saveAutomation = function() {
 		'endHour',
 		'endMinutes',
 		'startSelect',
-		'endSelect',
-		'hardwareSelect'
+		'endSelect'
+		//'hardwareSelect' TODO remove?
 	].forEach(function(id) {
 			configuration[id] = $('#' + id).val();
 		});
@@ -167,6 +179,11 @@ var init = function() {
 	numberTable();
 };
 
+var reset = function() {
+	simulatorLoaded = false;
+	automationLoaded = false;
+};
+
 var show = function() {
 	document.title = 'Nobody\'s Home | Configuration';
 	var tab = window.location.hash;
@@ -178,5 +195,6 @@ var show = function() {
 
 module.exports = {
 	init: init,
+	reset: reset,
 	show: show
 };

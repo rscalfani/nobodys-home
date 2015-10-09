@@ -120,6 +120,7 @@ module.exports = function(config) {
 			}
 		}),
 		saveSimulator: co.wrap(function*(simulatorObj) {
+			delete simulatorObj.func;
 			yield pfs.writeFileAsync(config.ws.simulatorLoc, JSON.stringify(simulatorObj));
 		}),
 		loadAutomation: co.wrap(function*() {
@@ -132,6 +133,7 @@ module.exports = function(config) {
 			}
 		}),
 		saveAutomation: co.wrap(function*(automationObj) {
+			delete automationObj.func;
 			yield pfs.writeFileAsync(config.ws.automationLoc, JSON.stringify(automationObj));
 		})
 	}

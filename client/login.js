@@ -55,6 +55,9 @@ var createLoginHandlers = function() {
 			}
 
 			if (result.auth) {
+				//reset configuration to load saved values
+				configuration.reset();
+
 				if (result.changePassword)
 					changePassword.show();
 				else

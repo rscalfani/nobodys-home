@@ -132,6 +132,11 @@
   padding-top: 1px;
   padding-bottom: 4px;
 }
+#configuration .tab-content #simulator #invalid {
+  font-size: 98%;
+  color: red;
+  display: none;
+}
 #configuration .tab-content #automation #automationForm #endHour {
   margin-left: 6px;
 }

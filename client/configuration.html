@@ -14,7 +14,7 @@
 
         <div id="simulator" class="tab-pane fade">
             <form id="simulatorForm">
-                <br><p class="instruction">Enter the name of each lit area, how many times or occurrences per day that each area is lit, & the duration (per each occurrence) that each area is lit.</p>
+                <br><p class="instruction">Enter the Node ID of each Z-Wave plug/switch, the name of each lit area, how many cycles per day that each area is lit, & the duration in minutes (per each cycle) that each area is lit.</p>
                 <!--REMEMBER TO ADD ID TO INSTRUCTION ^-->
                 <p class="example">example: (give example)</p>
 
@@ -22,40 +22,40 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Occurrences</th>
-                            <th>Duration</th>
+                            <th>Node ID</th>
+                            <th>Area</th>
+                            <th>Cycles</th>
+                            <th>Minutes</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td></td>
-                            <td><input name="id" class="text" type="text"/></td>
-                            <td><input name="name" class="text" type="text"/></td>
-                            <td><input name="occurrences" class="text" type="text"/></td>
-                            <td><input name="duration" class="text" type="text"/></td>
+                            <td><input name="nodeId" class="text" type="text"/></td>
+                            <td><input name="area" class="text" type="text"/></td>
+                            <td><input name="cycles" class="text" type="text"/></td>
+                            <td><input name="minutes" class="text" type="text"/></td>
                         </tr>
                         <tr>
                             <td></td>
-                            <td><input name="id" class="text" type="text"/></td>
-                            <td><input name="name" class="text" type="text"/></td>
-                            <td><input name="occurrences" class="text" type="text"/></td>
-                            <td><input name="duration" class="text" type="text"/></td>
+                            <td><input name="nodeId" class="text" type="text"/></td>
+                            <td><input name="area" class="text" type="text"/></td>
+                            <td><input name="cycles" class="text" type="text"/></td>
+                            <td><input name="minutes" class="text" type="text"/></td>
                         </tr>
                         <tr>
                             <td></td>
-                            <td><input name="id" class="text" type="text"/></td>
-                            <td><input name="name" class="text" type="text"/></td>
-                            <td><input name="occurrences" class="text" type="text"/></td>
-                            <td><input name="duration" class="text" type="text"/></td>
+                            <td><input name="nodeId" class="text" type="text"/></td>
+                            <td><input name="area" class="text" type="text"/></td>
+                            <td><input name="cycles" class="text" type="text"/></td>
+                            <td><input name="minutes" class="text" type="text"/></td>
                         </tr>
                         <tr>
                             <td></td>
-                            <td><input name="id" class="text" type="text"/></td>
-                            <td><input name="name" class="text" type="text"/></td>
-                            <td><input name="occurrences" class="text" type="text"/></td>
-                            <td><input name="duration" class="text" type="text"/></td>
+                            <td><input name="nodeId" class="text" type="text"/></td>
+                            <td><input name="area" class="text" type="text"/></td>
+                            <td><input name="cycles" class="text" type="text"/></td>
+                            <td><input name="minutes" class="text" type="text"/></td>
                         </tr>
                     </tbody>
                 </table>
@@ -65,6 +65,7 @@
                 </button>
 
                 <input type="submit" value="Save"/>
+                <p id="invalid">minutes cannot be greater than 23 hours</p>
             </form>
         </div>
 
@@ -91,12 +92,13 @@
                     <option>PM</option>
                 </select><br><br>
 
-                <p class="instruction">Which hardware are you using?</p>
+                <!--<p class="instruction">What hardware are you using?</p>-->
 
-                <select id="hardwareSelect">
-                    <option>This hardware</option>
-                    <option>The other hardware</option>
-                </select><br><br>
+                <!--<select id="hardwareSelect">-->
+                    <!--<option>Z-Wave plugs</option>-->
+                    <!--<option>Z-Wave switches</option>-->
+                    <!--<option>Z-Wave plugs and switches</option>-->
+                <!--</select><br><br>-->
 
                 <input type="submit" value="Save"/>
             </form>
