@@ -1,5 +1,8 @@
+var co = require('co');
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 var config = require('./config');
 var ws = require('./ws')(config);
+var automation = require('./automation')(config);
 
 ws.start();
 
@@ -13,3 +16,10 @@ var getExit = function(sigType) {
 
 process.on('SIGINT', getExit('SIGINT'));
 process.on('SIGTERM', getExit('SIGTERM'));
+
+var initAutomation = co.wrap(function*() {
+	yield automation.loadAutomationConfig();
+	//automation.getRunningTime();
+});
+
+initAutomation();
