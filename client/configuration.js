@@ -152,8 +152,8 @@ var saveAutomation = function() {
 		'startMinutes',
 		'endHour',
 		'endMinutes',
-		'startSelect',
-		'endSelect'
+		'startAmpm',
+		'endAmpm'
 		//'hardwareSelect' TODO remove?
 	].forEach(function(id) {
 			configuration[id] = $('#' + id).val();
