@@ -90,16 +90,27 @@ var saveSimulator = function() {
 	$('#simulatorForm tbody tr').each(function() {
 		var controller = {};
 		$(this).find('td input').each(function() {
-			controller[$(this).attr('name')] = $(this).val();
+			if ($(this).val() != '')
+				controller[$(this).attr('name')] = $(this).val().trim();
 		});
-		controllers.push(controller);
+		if (Object.keys(controller).length)
+			controllers.push(controller);
 	});
-
+	
+	var error = '';
 	var valid = controllers.every(function(controller) {
-		return controller.minutes <= 23 * 60;
+		if (!controller.nodeId.match(/^\d+$/))
+			error = 'Node ID must be a number';
+		else if (!controller.cycles.match(/^\d+$/))
+			error = 'Cycles must be a number';
+		else if (!controller.minutes.match(/^\d+$/))
+			error = 'Minutes must be a number';
+		else if (controller.minutes >= 23 * 60)
+			error = 'Minutes must be less than 23 hours';
+		return error == '';
 	});
-
-	if (!valid) {
+	if (error != '') {
+		$('#invalid').text(error);
 		$('#invalid').css('display', 'block');
 		return;
 	}
