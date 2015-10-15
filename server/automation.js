@@ -14,7 +14,7 @@ module.exports = function(config) {
 		return time;
 	};
 
-	return {
+	var automation = {
 		loadAutomationConfig: co.wrap(function*() {
 			automationConfig = JSON.parse(yield pfs.readFileAsync(config.ws.automationLoc));
 		}),
@@ -33,10 +33,15 @@ module.exports = function(config) {
 				endHour = Number(endHour) + 24;
 
 			// calculate running time in minutes
-			runningTime = (endHour - startHour) * 60 + (endMinutes - startMinutes); //TODO divide time by number of total sessions
+			runningTime = (endHour - startHour) * 60 + (endMinutes - startMinutes);
 			if (runningTime == 0)
 				runningTime = 24 * 60;
 			return runningTime;
-		}
+		},
+		init: co.wrap(function*() {
+			yield automation.loadAutomationConfig();
+			console.log('running time: ' + automation.getRunningTime() + ' minutes');
+		})
 	};
+	return automation;
 };
