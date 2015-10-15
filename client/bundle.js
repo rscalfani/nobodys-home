@@ -863,13 +863,14 @@ var createConfigurationHandlers = function() {
 	});
 
 	$('#webServer input[value="Logout"]').click(function() {
+		$('#invalid').css('display', '');
+
 		api({func: 'logout'})
 		.then(function(result) {
 			if (result.err) {
 				alert(result.err);
 				return;
 			}
-
 			window.location = '#';
 		})
 		.then(null, function(jqXHR, textStatus, errorThrown) {
@@ -938,7 +939,6 @@ var saveSimulator = function() {
 	});
 
 	if (!valid) {
-		console.log('cannot be greater than 23 hours'); //TODO display err
 		$('#invalid').css('display', 'block');
 		return;
 	}
@@ -993,7 +993,7 @@ var saveAutomation = function() {
 		'endMinutes',
 		'startAmpm',
 		'endAmpm'
-		//'hardwareSelect' TODO remove?
+		//'hardwareSelect'
 	].forEach(function(id) {
 			configuration[id] = $('#' + id).val();
 		});
