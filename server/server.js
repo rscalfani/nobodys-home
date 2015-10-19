@@ -18,5 +18,9 @@ var getExit = function(sigType) {
 process.on('SIGINT', getExit('SIGINT'));
 process.on('SIGTERM', getExit('SIGTERM'));
 
-automation.init();
-simulator.init();
+var init = co.wrap(function*() {
+	yield automation.init();
+	yield simulator.init();
+});
+
+init();

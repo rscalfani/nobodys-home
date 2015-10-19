@@ -23,8 +23,12 @@ module.exports = function(config, automation) {
 			sessionLength = automation.getRunningTime()/simulator.getNumberOfSessions(); //make sure to only call getNumberOfSessions ONCE!
 			return sessionLength;
 		},
-		sortWorkingSet: function() {
-			var workingSet = simulatorConfig.configuration.controllers; //TODO construct workingSet
+		getWorkingSet: function() {
+			var workingNodeIds = automation.getWorkingNodeIds();
+			var workingSet = R.filter(function(controller) {
+				//keep configured nodes that are working
+				return R.indexOf(controller.nodeId, workingNodeIds) != -1;
+			}, simulatorConfig.configuration.controllers);
 			var compare = function(a, b) {return Number(b.minutes) - Number(a.minutes)};
 			return R.sort(compare, workingSet);
 		},
@@ -34,7 +38,7 @@ module.exports = function(config, automation) {
 			simulator.getSessionLength();
 			console.log('number of sessions: ' + numberOfSessions);
 			console.log('session length: ' + sessionLength + ' minutes');
-			console.dir(simulator.sortWorkingSet(), {depth:null});
+			console.dir(simulator.getWorkingSet(), {depth:null});
 		})
 	};
 	return simulator;
